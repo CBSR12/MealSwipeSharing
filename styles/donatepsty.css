@@ -1,0 +1,15 @@
+.month{
+    color: black
+}
+
+.month_options{
+    padding: 30px;
+    position: absolute;
+    /*display: none;*/
+}
+
+.day_options{
+    position: absolute;
+
+}
+
