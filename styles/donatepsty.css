@@ -31,7 +31,138 @@
     position: relative;
     display: inline-block;
 }
-.day_options{
-    position: absolute;
 
+.btn-group button {
+    background-color: #04AA6D; /* Green background */
+    border: 1px solid green; /* Green border */
+    color: white; /* White text */
+    padding: 10px 24px; /* Some padding */
+    cursor: pointer; /* Pointer/hand icon */
+    float: left; /* Float the buttons side by side */
+  }
+  
+  .btn-group button:not(:last-child) {
+    border-right: none; /* Prevent double borders */
+  }
+  
+  /* Clear floats (clearfix hack) */
+  .btn-group:after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+  
+  /* Add a background color on hover */
+  .btn-group button:hover {
+    background-color: #3e8e41;
+  }
+
+.days{
+    color: black;
+    padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+.day_options{
+    display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.day_options ul{
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.main_2{
+    position: relative;
+    display: inline-block;
+}
+
+.day_options ul:hover {background-color: #ddd;}
+
+.main_2:hover .day_options{display: block;}
+
+.main_2:hover:hover .days {background-color: #3e8e41;}
+
+.time{
+    color: black;
+    padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+.times{
+    display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.times ul{
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.main_3{
+    position: relative;
+    display: inline-block;
+}
+
+.times ul:hover {background-color: #ddd;}
+
+.main_3:hover .times{display: block;}
+
+.main_3:hover .time {background-color: #3e8e41;}
+
+.location{
+    color: black;
+    padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+.locations{
+    display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.locations ul{
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.main_4{
+    position: relative;
+    display: inline-block;
+}
+
+.locations ul:hover {background-color: #ddd;}
+
+.main_4:hover .locations{display: block;}
+
+.main_4:hover .location {background-color: #3e8e41;}
+
+.day_options:hover .lol {
+   color: black;
+}
+
+.lol{
+    color:#04AA6D
 }
