@@ -13,6 +13,7 @@ app.get('/', (req, res) => {
 
 app.get('/new', (req, res) => {
     console.log('suc')
+    res.send('Haji')
 })
 
 app.post('/new', (req, res) => {
