@@ -28,3 +28,7 @@ app.post('/new', (req, res) => {
 app.listen(3000, () => {
     console.log("HI")
 })
+
+function makeEvent(month, day, time, swipes, location) {
+    
+}
