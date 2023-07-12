@@ -30,5 +30,7 @@ app.listen(3000, () => {
 })
 
 function makeEvent(month, day, time, swipes, location) {
-    
+
 }
+
+const URL = ""
