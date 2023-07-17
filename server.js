@@ -33,4 +33,4 @@ function makeEvent(month, day, time, swipes, location) {
 
 }
 
-const URL = ""
+const URL = "mongodb+srv://srudra1024:Ninja2789@cluster0.vf67anc.mongodb.net/?retryWrites=true&w=majority"
