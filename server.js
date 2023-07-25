@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const event = require('./data')
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static('styles'))
+var eventArray = [];
 
 
 mongoose.connect("mongodb+srv://srudra1024:Ninja2789@cluster0.vf67anc.mongodb.net/?retryWrites=true&w=majority")
@@ -11,28 +12,40 @@ mongoose.connect("mongodb+srv://srudra1024:Ninja2789@cluster0.vf67anc.mongodb.ne
 app.use(express.json())
 app.set('view engine', 'ejs')
 
+//Routes
 app.get('/', (req, res) => {
-    res.render('donatep')
+    res.render('mainp')
 })
 
+app.get('/hungry', findEvent, (req, res) => {
+    res.render('hungryp', {events: eventArray})
+})
 
-app.get('/new', (req, res) => {
+app.get('/donate', (req, res) => {
+    
+     res.render('donatep')
+})
+
+app.get('/event_made', (req, res) => {
     console.log('suc')
     res.send('Haji')
 })
 
-app.post('/new', makeEvent, (req, res) => {
+app.post('/event_made', makeEvent, (req, res) => {
     console.log(JSON.stringify(req.body.day));
-    //console.log( req.body.month + req.body.day + req.body.time + req.body.location + req.body.swipes);
     res.send(req.body.month);
-    
-    
-    
 })
 
+app.post('/confirmation', (req,res) => {
+    //hi
+})
+
+//Server Port
 app.listen(3000, () => {
     console.log("HI")
 })
+
+//MiddleWare Functions
 
 async function makeEvent(req, res, next) {
 
@@ -47,8 +60,27 @@ async function makeEvent(req, res, next) {
         console.log(e.message)
     }
     
-    
     next()
 }
 
+async function findEvent(req, res, next) {
 
+    try{
+        //For Final: use date.now
+        var a = Date.now()
+        console.log(a)
+        var found = await event.find({date: {$gt: a}}).limit(4)
+        eventArray = found;
+        if(eventArray.length == 0) {
+            console.log("No Events Available")
+        } else {
+            console.log("Successfully found events")
+        }
+        
+    } catch(e) {
+        console.log(e.message)
+        console.log("Did not find successfully")
+    }
+    next();
+
+}

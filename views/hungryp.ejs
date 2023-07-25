@@ -8,6 +8,25 @@
     <link rel="stylesheet" href="../styles/hungrypsty.css">
 </head>
 <body>
-    
+    <form action="/confirmation" method="post">
+        <% if(events.length > 0) { %>
+            <div class="option_group">
+                <% for(let event of events) { %>
+                    <div class="option"> 
+                    
+                    </div>
+                <% } %>
+                
+            </div>
+        <input type="submit" value="Confirm">
+        <% } else { %>
+           <p> No Options Available at This Time </p> 
+        <% } %>
+    </form>
+    <ul>
+        <% for(let lol of events) {%>
+            <p><%= lol.swipes %></p>
+          <% } %>
+      </ul>
 </body>
 </html>
