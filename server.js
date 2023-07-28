@@ -37,7 +37,8 @@ app.post('/event_made', makeEvent, (req, res) => {
 })
 
 app.post('/confirmation', (req,res) => {
-    //hi
+    console.log(req.body.values)
+    res.send(req.body.values)
 })
 
 //Server Port
@@ -67,7 +68,7 @@ async function findEvent(req, res, next) {
 
     try{
         //For Final: use date.now
-        var a = Date.now()
+        var a = new Date(2022, 6, 14)
         console.log(a)
         var found = await event.find({date: {$gt: a}}).limit(4)
         eventArray = found;

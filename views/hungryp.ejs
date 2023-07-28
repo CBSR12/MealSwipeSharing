@@ -8,25 +8,24 @@
     <link rel="stylesheet" href="../styles/hungrypsty.css">
 </head>
 <body>
-    <form action="/confirmation" method="post">
+    <form action="/confirmation" method="post" id="confirmationOne">
         <% if(events.length > 0) { %>
             <div class="option_group">
-                <% for(let event of events) { %>
+                <% for(let i = 0; i < events.length; i++) { %>
                     <div class="option"> 
-                    
+                        <p>Location: <%= events[i].location %></p>
+                        <p>Date: <%= events[i].date.getMonth() + 1 %> - <%= events[i].date.getDate() %></p>
+                        <p>Swipes: <%= events[i].swipes %></p>
+                        <button type="submit" form="confirmationOne" value="<% i %> "> Confirm</button>
                     </div>
                 <% } %>
                 
             </div>
-        <input type="submit" value="Confirm">
+        
         <% } else { %>
            <p> No Options Available at This Time </p> 
         <% } %>
     </form>
-    <ul>
-        <% for(let lol of events) {%>
-            <p><%= lol.swipes %></p>
-          <% } %>
-      </ul>
+    
 </body>
 </html>
