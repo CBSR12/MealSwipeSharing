@@ -17,7 +17,26 @@ const donationSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model("Events", donationSchema)
+const event = mongoose.model("events", donationSchema)
+
+const userSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    email:{
+        type: String,
+        required: true
+    },
+    password:{
+        type:String,
+        required:true
+    }
+})
+
+const users = mongoose.model("user", userSchema)
+
+module.exports = {event, users}
 
 
 

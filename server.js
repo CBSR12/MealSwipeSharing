@@ -1,16 +1,43 @@
+if(process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+}
+
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
-const event = require('./data')
-app.use(express.urlencoded({ extended: true }))
+const { event, users } = require('./data')
+const bcrypt = require('bcrypt')
+const passport = require('passport')
+const flash = require('express-flash')
+const session = require('express-session')
+const method_override = require('method-override')
+const initializePassport = require('./passport-config')
+initializePassport(
+    passport,
+    email => users.findOne({email: email}),
+    id => users.findById({_id: id})
+)
+
+
+app.use(express.urlencoded({ extended: false }))
 app.use(express.static('styles'))
 var eventArray = [];
+
 
 
 mongoose.connect("mongodb+srv://srudra1024:Ninja2789@cluster0.vf67anc.mongodb.net/?retryWrites=true&w=majority")
 
 app.use(express.json())
 app.set('view engine', 'ejs')
+app.use(flash())
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+}))
+app.use(passport.initialize())
+app.use(passport.session())
+app.use(method_override('_method'))
 
 //Routes
 app.get('/', (req, res) => {
@@ -39,6 +66,53 @@ app.post('/event_made', makeEvent, (req, res) => {
 app.post('/confirmation', (req,res) => {
     console.log(req.body.values)
     res.send(req.body.values)
+})
+
+app.get('/fakeHome', checkAuthenticated, (req, res) => {
+
+    res.render('index', {name: req.user.name})
+})
+
+app.get('/register', checkNotAuthenticated, (req, res) => {
+    res.render('register')
+  })
+
+app.get('/login', checkNotAuthenticated, (req,res) => {
+    res.render('login')
+})
+
+app.get('/separate', (req, res) => {
+    res.send(req.user.name)
+})
+
+app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
+    successRedirect: '/fakeHome',
+    failureRedirect: '/login',
+    failureFlash: true
+}))
+
+app.post('/register', checkNotAuthenticated, async (req, res) => {
+    try{
+        const hashedPassword =  await bcrypt.hash(req.body.password, 10)
+        users.create({
+            name: req.body.name,
+            email:req.body.email,
+            password: hashedPassword
+        }).then((tempUser, err) => {
+            console.log(tempUser);
+        });
+        console.log("WAZZUP")
+        
+        res.redirect('/login')
+    } catch(e) {
+        console.log(e.message)
+        res.redirect('/register')
+    }
+})
+
+app.delete('/logout', (req,res) => {
+    req.logOut( ()=> console.log("Logged Out"))
+    res.redirect('/login')
 })
 
 //Server Port
@@ -85,3 +159,18 @@ async function findEvent(req, res, next) {
     next();
 
 }
+
+    function checkAuthenticated(req, res, next) {
+        if(req.isAuthenticated()) {
+            return next()
+        } else {
+            res.redirect('/login')
+        }
+    }
+
+    function checkNotAuthenticated(req, res, next) {
+        if(req.isAuthenticated()) {
+            return res.redirect('/fakeHome')
+        } 
+        next()
+    }
