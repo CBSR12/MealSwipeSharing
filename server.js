@@ -11,7 +11,9 @@ const passport = require('passport')
 const flash = require('express-flash')
 const session = require('express-session')
 const method_override = require('method-override')
+
 const initializePassport = require('./passport-config')
+
 initializePassport(
     passport,
     email => users.findOne({email: email}),
@@ -21,6 +23,7 @@ initializePassport(
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.static('styles'))
+
 var eventArray = [];
 
 
@@ -38,6 +41,7 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(method_override('_method'))
+
 
 //Routes
 app.get('/', (req, res) => {
@@ -64,8 +68,15 @@ app.post('/event_made', makeEvent, (req, res) => {
 })
 
 app.post('/confirmation', (req,res) => {
-    console.log(req.body.values)
-    res.send(req.body.values)
+    try{
+            console.log("hi")
+            console.log(req.body.confirm)
+        //res.send(req.body.confirmationOne)
+    } catch(e) {
+        console.log(e.message)
+    }
+    
+    res.send('HI')
 })
 
 app.get('/fakeHome', checkAuthenticated, (req, res) => {
@@ -117,7 +128,7 @@ app.delete('/logout', (req,res) => {
 
 //Server Port
 app.listen(3000, () => {
-    console.log("HI")
+    console.log("HI! Running on Port 3000.")
 })
 
 //MiddleWare Functions
@@ -142,7 +153,7 @@ async function findEvent(req, res, next) {
 
     try{
         //For Final: use date.now
-        var a = new Date(2022, 6, 14)
+        var a = Date.now()
         console.log(a)
         var found = await event.find({date: {$gt: a}}).limit(4)
         eventArray = found;
