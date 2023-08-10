@@ -28,8 +28,9 @@
             </div>
             <label for="confirm">Select an option: </label>
             <select id="confirm" name="confirm" value="<%= locals.confirm %>" >
-                <% for(let j = 1; j < ) %>
-                <option value="1">1</option>
+                <% for(let j = 0; j < events.length; j++) {%>
+                    <option value="<%= j+1 %>"><%= j+1 %></option>
+                <% } %>
             </select>
 
             <input type="submit" value="Submit">
