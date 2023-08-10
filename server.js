@@ -13,11 +13,10 @@ const session = require('express-session')
 const method_override = require('method-override')
 
 const initializePassport = require('./passport-config')
-
 initializePassport(
     passport,
     email => users.findOne({email: email}),
-    id => users.findById({_id: id})
+    id =>  users.findById({_id: id})
 )
 
 
@@ -32,6 +31,7 @@ mongoose.connect("mongodb+srv://srudra1024:Ninja2789@cluster0.vf67anc.mongodb.ne
 
 app.use(express.json())
 app.set('view engine', 'ejs')
+app.use(method_override('_method'))
 app.use(flash())
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -40,7 +40,7 @@ app.use(session({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
-app.use(method_override('_method'))
+
 
 
 //Routes
@@ -80,7 +80,7 @@ app.post('/confirmation', (req,res) => {
 })
 
 app.get('/fakeHome', checkAuthenticated, (req, res) => {
-
+    console.log(req.user.name)
     res.render('index', {name: req.user.name})
 })
 
@@ -88,7 +88,8 @@ app.get('/register', checkNotAuthenticated, (req, res) => {
     res.render('register')
   })
 
-app.get('/login', checkNotAuthenticated, (req,res) => {
+app.get('/login', checkNotAuthenticated, (req , res) => {
+    
     res.render('login')
 })
 
