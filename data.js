@@ -14,6 +14,10 @@ const donationSchema = new mongoose.Schema({
         type: Number,
         required: true,
 
+    },
+    swipesRemaining: {
+        type: Number,
+        required: true
     }
 })
 
@@ -31,7 +35,10 @@ const userSchema = new mongoose.Schema({
     password:{
         type: String,
         required:true
-    }
+    },
+    donate: donationSchema,
+    collect: donationSchema
+
 })
 
 const users = mongoose.model("user", userSchema)

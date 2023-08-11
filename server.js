@@ -44,44 +44,38 @@ app.use(passport.session())
 
 
 //Routes
-app.get('/', (req, res) => {
-    res.render('mainp')
+app.get('/', checkAuthenticated, (req, res) => {
+    console.log(req.user)
+
+    res.render('mainp', {name: req.user.name})
 })
 
-app.get('/hungry', findEvent, (req, res) => {
+app.get('/hungry', checkAuthenticated, findEvent, (req, res) => {
     res.render('hungryp', {events: eventArray})
 })
 
-app.get('/donate', (req, res) => {
-    
+app.get('/donate', checkAuthenticated, (req, res) => {
      res.render('donatep')
 })
 
-app.get('/event_made', (req, res) => {
-    console.log('suc')
-    res.send('Haji')
+app.get('/event_made', checkAuthenticated, (req, res) => {
+    res.send('You have not created an event yet')
 })
 
-app.post('/event_made', makeEvent, (req, res) => {
-    console.log(JSON.stringify(req.body.day));
+app.post('/event_made', checkAuthenticated, makeEvent, (req, res) => {
+    console.log("Month of Event is Shown on Screen");
     res.send(req.body.month);
 })
-
-app.post('/confirmation', (req,res) => {
+//Needs Update for Mongoose Events: Swipes Remaining and Link Event to a user
+app.post('/confirmation', checkAuthenticated, assignEvent, (req,res) => {
     try{
-            console.log("hi")
+            console.log("Option Selected: ")
             console.log(req.body.confirm)
-        //res.send(req.body.confirmationOne)
     } catch(e) {
         console.log(e.message)
     }
     
-    res.send('HI')
-})
-
-app.get('/fakeHome', checkAuthenticated, (req, res) => {
-    console.log(req.user.name)
-    res.render('index', {name: req.user.name})
+    res.send('Event Confirmed')
 })
 
 app.get('/register', checkNotAuthenticated, (req, res) => {
@@ -89,16 +83,15 @@ app.get('/register', checkNotAuthenticated, (req, res) => {
   })
 
 app.get('/login', checkNotAuthenticated, (req , res) => {
-    
     res.render('login')
 })
 
-app.get('/separate', (req, res) => {
+app.get('/separate', checkAuthenticated, (req, res) => {
     res.send(req.user.name)
 })
 
 app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
-    successRedirect: '/fakeHome',
+    successRedirect: '/',
     failureRedirect: '/login',
     failureFlash: true
 }))
@@ -113,7 +106,7 @@ app.post('/register', checkNotAuthenticated, async (req, res) => {
         }).then((tempUser, err) => {
             console.log(tempUser);
         });
-        console.log("WAZZUP")
+        console.log("User Registered")
         
         res.redirect('/login')
     } catch(e) {
@@ -127,10 +120,6 @@ app.delete('/logout', (req,res) => {
     res.redirect('/login')
 })
 
-//Server Port
-app.listen(3000, () => {
-    console.log("HI! Running on Port 3000.")
-})
 
 //MiddleWare Functions
 
@@ -140,7 +129,8 @@ async function makeEvent(req, res, next) {
         var tempEvent = await event.create({
             date: new Date(2023, req.body.month, req.body.day, req.body.time),
             location: req.body.location,
-            swipes: req.body.swipes
+            swipes: req.body.swipes,
+            swipesRemaining: req.body.swipes
         })
         console.log('Event made Succesfully')
     }catch(e) {
@@ -182,7 +172,21 @@ async function findEvent(req, res, next) {
 
     function checkNotAuthenticated(req, res, next) {
         if(req.isAuthenticated()) {
-            return res.redirect('/fakeHome')
+            return res.redirect('/')
         } 
         next()
     }
+
+    async function assignEvent(req, res, next) {
+        var tempEvent = await event.updateOne({_id: eventArray[req.body.confirm]._id}, {swipesRemaining: eventArray[req.body.confirm].swipesRemaining-1})
+        console.log("Event Swipes Updated")
+        await users.updateOne({_id: req.user._id}, {donate: tempEvent})
+        console.log("User profile updated")
+        console.log(req.user)
+        next()
+    }
+
+    //Server Port
+    app.listen(3000, () => {
+        console.log("HI! Running on Port 3000.")
+    })
