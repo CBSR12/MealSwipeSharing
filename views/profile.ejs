@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Profile</title>
+</head>
+<body>
+    <h1>Here are your events: </h1>
+    <h2>Donating: </h2>
+    <% if(donations.length) == 0 { %>
+        <p>You are not currently donating any meals.</p>
+    <% } else {%
+        <%for(let i = 0; i < donations.length; i++) { %>
+            <div class="donations">
+                <p>Location: <%= donations[i].location %></p>
+                <p>Date: <%= donations[i].date.getMonth() + 1 %> - <%= donations[i].date.getDate() %></p>
+                <p>Swipes Donating: <%= donations[i].swipes %></p>
+            </div>
+            <% if (i != donations.length - 1) {%>
+                <hr>
+            <% } %>
+        <%}%>
+    <% }%>
+    <% if(collections.length) == 0 {<p> You are not currently signed up for any meals </p>} %>
+    <% else {%>
+        <p>Location: <%= collections[i].location %></p>
+        <p>Date: <%= collections[i].date.getMonth() + 1 %> - <%= collections[i].date.getDate() %></p>
+    <%}%>
+    
+    <ul></ul>
+</body>
+</html>
