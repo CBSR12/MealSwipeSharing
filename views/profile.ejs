@@ -8,13 +8,24 @@
 <body>
     <h1>Here are your events: </h1>
     <h2>Donating: </h2>
-    <% if(donations.length) == 0 { %>
+    <% if(donations.length === 0) { %>
         <p>You are not currently donating any meals.</p>
-    <% } else {%
-        <%for(let i = 0; i < donations.length; i++) { %>
+    <% } else { %>
+        <% for(let i = 0; i < donations.length; i++) { %>
             <div class="donations">
                 <p>Location: <%= donations[i].location %></p>
-                <p>Date: <%= donations[i].date.getMonth() + 1 %> - <%= donations[i].date.getDate() %></p>
+                <p>Date: <%= donations[i].date.getMonth() + 1 %>-<%= donations[i].date.getDate() %></p>
+                        <% var mins = donations[i].date.getMinutes() %>
+                        <% if(mins < 10){ mins = `0${mins}` }%>
+                            <% if(donations[i].date.getHours() === 0){ %>
+                                <p>Time: 12:<%= mins %> am</p>
+                            <% } else if(donations[i].date.getHours() < 12) {  %>
+                                <p>Time: <%= donations[i].date.getHours() %>:<%= mins %> am</p>
+                            <% } else if(donations[i].date.getHours() === 12) { %>
+                                <p>Time: <%= donations[i].date.getHours() %>:<%= mins %> pm</p>
+                            <% } else {%>
+                                <p>Time: <%= donations[i].date.getHours()-12 %>:<%= mins %> pm
+                            <% } %>
                 <p>Swipes Donating: <%= donations[i].swipes %></p>
             </div>
             <% if (i != donations.length - 1) {%>
@@ -22,12 +33,28 @@
             <% } %>
         <%}%>
     <% }%>
-    <% if(collections.length) == 0 {<p> You are not currently signed up for any meals </p>} %>
-    <% else {%>
-        <p>Location: <%= collections[i].location %></p>
-        <p>Date: <%= collections[i].date.getMonth() + 1 %> - <%= collections[i].date.getDate() %></p>
+    <h2>Collecting: </h2
+    <% if(collections.length === 0) { %>
+        <p> You are not currently signed up for any meals </p> 
+    <% }else {%>
+        <% for(let i = 0; i < collections.length; i++) { %>
+        <div class="collections">
+            <p>Location: <%= collections[i].location %></p>
+            <p>Date: <%=  collections[i].date.getMonth() + 1 %>-<%= collections[i].date.getDate() %></p>
+                <% var mins = collections[i].date.getMinutes(); %>
+                    <% if(mins < 10){ mins = `0${mins}` }%>
+                    <% if(collections[i].date.getHours() === 0){ %>
+                        <p>Time: 12:<%= mins %> am</p>
+                    <% } else if(collections[i].date.getHours() < 12) {  %>
+                        <p>Time: <%= collections[i].date.getHours() %>:<%= mins %> am</p>
+                    <% } else if(collections[i].date.getHours() === 12) { %>
+                        <p>Time: <%= collections[i].date.getHours() %>:<%= mins %> pm</p>
+                    <% } else {%>
+                        <p>Time: <%= collections[i].date.getHours()-12 %>:<%= mins %> pm
+                    <% } %>
+        </div>
+        <% if(i != collections.length - 1) %> <hr>
+        <% } %>
     <%}%>
-    
-    <ul></ul>
 </body>
 </html>

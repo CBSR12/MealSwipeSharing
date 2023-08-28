@@ -16,9 +16,20 @@
             <div class="option_group">
                 <% for(let i = 0; i < events.length; i++) { %>
                     <div class="option"> 
+                        <% var mins = events[i].date.getMinutes(); %>
+                        <% if(mins < 10){ mins = `0${mins}` }%>
                         <p>Option <%= i+1 %></p>
                         <p>Location: <%= events[i].location %></p>
                         <p>Date: <%= events[i].date.getMonth() + 1 %> - <%= events[i].date.getDate() %></p>
+                            <% if(events[i].date.getHours() == 0){ %>
+                                <p>Time: 12:<%= mins %> am</p>
+                            <% } else if(events[i].date.getHours() < 12) {  %>
+                                <p>Time: <%= events[i].date.getHours() %>:<%= mins %> am</p>
+                            <% } else if(events[i].date.getHours() == 12) { %>
+                                <p>Time: <%= events[i].date.getHours() %>:<%= mins %> pm</p>
+                            <% } else {%>
+                                <p>Time: <%= events[i].date.getHours()-12 %>:<%= mins %> pm
+                            <% } %>
                         <p>Swipes Remaining: <%= events[i].swipesRemaining %></p>
                     </div>
                     <% if (i != events.length - 1) {%>

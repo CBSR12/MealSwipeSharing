@@ -36,8 +36,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         required:true
     },
-    donate: donationSchema,
-    collect: donationSchema
+    donate: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "events"
+    }],
+    collect: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "events"
+    }]
 
 })
 

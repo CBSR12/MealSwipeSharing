@@ -44,8 +44,8 @@ app.use(passport.session())
 
 
 //Routes
-app.get('/', checkAuthenticated, (req, res) => {
-    console.log(req.user)
+app.get('/', checkAuthenticated, async (req, res) => {
+    console.log("User name: " + req.user.name)
 
     res.render('mainp', {name: req.user.name})
 })
@@ -60,6 +60,14 @@ app.get('/donate', checkAuthenticated, (req, res) => {
 
 app.get('/event_made', checkAuthenticated, (req, res) => {
     res.send('You have not created an event yet')
+})
+
+app.get('/profile', checkAuthenticated, async (req,res) => {
+    var toDonate = await req.user.populate('donate')
+    console.log(toDonate.donate)
+    var collecting = await req.user.populate('collect')
+    console.log(collecting.collect)
+    res.render('profile', {donations: toDonate.donate, collections: collecting.collect})
 })
 
 app.post('/event_made', checkAuthenticated, makeEvent, (req, res) => {
@@ -132,7 +140,9 @@ async function makeEvent(req, res, next) {
             swipes: req.body.swipes,
             swipesRemaining: req.body.swipes
         })
-        console.log('Event made Succesfully')
+        await users.findOneAndUpdate({_id: req.user._id}, {$push: {donate: tempEvent._id}})
+
+        console.log('Event made Succesfully + User Profile Updated')
     }catch(e) {
         console.log(e.message)
     }
@@ -143,9 +153,7 @@ async function makeEvent(req, res, next) {
 async function findEvent(req, res, next) {
 
     try{
-        //For Final: use date.now
         var a = Date.now()
-        console.log(a)
         var found = await event.find({date: {$gt: a}}).limit(4)
         eventArray = found;
         if(eventArray.length == 0) {
@@ -178,11 +186,11 @@ async function findEvent(req, res, next) {
     }
 
     async function assignEvent(req, res, next) {
-        var tempEvent = await event.updateOne({_id: eventArray[req.body.confirm]._id}, {swipesRemaining: eventArray[req.body.confirm].swipesRemaining-1})
+        var tempEvent = await event.findOneAndUpdate({_id: eventArray[req.body.confirm]._id}, {swipesRemaining: eventArray[req.body.confirm].swipesRemaining-1})
         console.log("Event Swipes Updated")
-        await users.updateOne({_id: req.user._id}, {donate: tempEvent})
+        var lol = await users.findOneAndUpdate({_id: req.user._id}, {$push: {collect: tempEvent._id}})
         console.log("User profile updated")
-        console.log(req.user)
+        
         next()
     }
 
