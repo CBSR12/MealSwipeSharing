@@ -27,7 +27,7 @@ var eventArray = [];
 
 
 
-mongoose.connect("mongodb+srv://srudra1024:Ninja2789@cluster0.vf67anc.mongodb.net/?retryWrites=true&w=majority")
+mongoose.connect(`${process.env.DB_Link}`)
 
 app.use(express.json())
 app.set('view engine', 'ejs')
